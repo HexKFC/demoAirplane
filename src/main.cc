@@ -9,10 +9,32 @@ SDL_Texture *tex = NULL;
 SDL_Renderer *ren = NULL;
 SDL_Window *win = NULL;
 
-int load_texture();
-
+int Load_texture();
+void Quit();
+int Init();
 int main(int argc, char* argv[]) 
 {
+    //initialization
+    if(Init()<0){
+        std::cout << "init Error" << std::endl;
+        return -1;
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        SDL_RenderClear(ren);
+        SDL_RenderCopy(ren, tex, NULL, NULL);
+        SDL_RenderPresent(ren);
+        SDL_Delay(10000);
+    }
+
+    Quit();
+
+    // Return
+    return 0;
+}
+
+int Init(){
+
     if (SDL_Init(SDL_INIT_VIDEO)) {
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return -1;
@@ -33,29 +55,15 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    if(!load_texture()){
+    if(!Load_texture()){
         std::cout << "load_texture Error" << std::endl;
         SDL_Quit();
         return -1;
     }
 
-    for (int i = 0; i < 3; ++i) {
-        SDL_RenderClear(ren);
-        SDL_RenderCopy(ren, tex, NULL, NULL);
-        SDL_RenderPresent(ren);
-        SDL_Delay(10000);
-    }
-
-    SDL_DestroyTexture(tex);
-    SDL_DestroyRenderer(ren);
-    SDL_DestroyWindow(win);
-    SDL_Quit();
-
-    // Return
-    return 0;
 }
 
-int load_texture(){
+int Load_texture(){
 
     std::string imagePath = "nacho.bmp";
 
@@ -79,4 +87,13 @@ int load_texture(){
     }
 
     return 1;
+}
+
+void Quit(){
+
+    SDL_DestroyTexture(tex);
+    SDL_DestroyRenderer(ren);
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+
 }
