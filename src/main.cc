@@ -8,6 +8,7 @@
 SDL_Texture *tex = NULL;
 SDL_Renderer *ren = NULL;
 SDL_Window *win = NULL;
+SDL_Event MainEvent;
 
 int Load_texture();
 void Quit();
@@ -87,12 +88,41 @@ int Load_texture(){
 }
 
 void Play(){
+
+    //show the Easter egg image
+    //展示彩蛋图片
     for (int i = 0; i < 3; ++i) {
         SDL_RenderClear(ren);
         SDL_RenderCopy(ren, tex, NULL, NULL);
         SDL_RenderPresent(ren);
         SDL_Delay(10000);
     }
+
+	while (SDL_WaitEvent(&MainEvent))
+	{
+		switch (MainEvent.type)
+		{
+		case SDL_QUIT:
+			Quit();
+			break;
+		
+		case SDL_KEYDOWN:
+
+			switch (MainEvent.key.keysym.sym)
+			{
+			case SDLK_ESCAPE:
+				Quit();
+				break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+
 }
 
 void Quit(){
