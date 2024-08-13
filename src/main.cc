@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
 int Init(){
 
-    if (SDL_Init(SDL_INIT_VIDEO)) {
+    if (SDL_Init(SDL_INIT_EVERYTHING)) {
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return -1;
     }
