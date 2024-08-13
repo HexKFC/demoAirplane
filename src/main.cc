@@ -5,6 +5,12 @@
 #include <iostream>
 #include <SDL.h>
 
+SDL_Texture *tex = NULL;
+SDL_Renderer *ren = NULL;
+SDL_Window *win = NULL;
+
+int load_texture();
+
 int main(int argc, char* argv[]) 
 {
     if (SDL_Init(SDL_INIT_VIDEO)) {
@@ -12,14 +18,14 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    SDL_Window *win = SDL_CreateWindow("demoAirplane", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    win = SDL_CreateWindow("demoAirplane", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
 
     if (win == nullptr) {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         return -1;
     }
 
-    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateRender Error: " << SDL_GetError() << std::endl;
@@ -27,23 +33,8 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    std::string imagePath = "nacho.bmp";
-    SDL_Surface *bmp = SDL_LoadBMP(imagePath.c_str());
-    if (bmp == nullptr) {
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return -1;
-    }
-
-    SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, bmp);
-
-    SDL_FreeSurface(bmp);
-    if (tex == nullptr) {
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
+    if(!load_texture()){
+        std::cout << "load_texture Error" << std::endl;
         SDL_Quit();
         return -1;
     }
@@ -62,4 +53,30 @@ int main(int argc, char* argv[])
 
     // Return
     return 0;
+}
+
+int load_texture(){
+
+    std::string imagePath = "nacho.bmp";
+
+    SDL_Surface *bmp = SDL_LoadBMP(imagePath.c_str());
+    if (bmp == nullptr) {
+        SDL_DestroyRenderer(ren);
+        SDL_DestroyWindow(win);
+        std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return 0;
+    }
+
+    tex = SDL_CreateTextureFromSurface(ren, bmp);
+    SDL_FreeSurface(bmp);
+    if (tex == nullptr) {
+        SDL_DestroyRenderer(ren);
+        SDL_DestroyWindow(win);
+        std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return 0;
+    }
+
+    return 1;
 }
