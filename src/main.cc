@@ -12,6 +12,8 @@ SDL_Window *win = NULL;
 int Load_texture();
 void Quit();
 int Init();
+void Play();
+
 int main(int argc, char* argv[]) 
 {
     //initialization
@@ -20,12 +22,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    for (int i = 0; i < 3; ++i) {
-        SDL_RenderClear(ren);
-        SDL_RenderCopy(ren, tex, NULL, NULL);
-        SDL_RenderPresent(ren);
-        SDL_Delay(10000);
-    }
+    Play();
 
     Quit();
 
@@ -87,6 +84,15 @@ int Load_texture(){
     }
 
     return 0;
+}
+
+void Play(){
+    for (int i = 0; i < 3; ++i) {
+        SDL_RenderClear(ren);
+        SDL_RenderCopy(ren, tex, NULL, NULL);
+        SDL_RenderPresent(ren);
+        SDL_Delay(10000);
+    }
 }
 
 void Quit(){
