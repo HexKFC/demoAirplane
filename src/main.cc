@@ -5,9 +5,10 @@
 #include <iostream>
 #include <SDL.h>
 
-SDL_Texture *tex = NULL;
+SDL_Texture *egg_tex = NULL;
 SDL_Renderer *ren = NULL;
 SDL_Window *win = NULL;
+SDL_Surface *egg_surf = NULL;
 SDL_Event MainEvent;
 
 int Load_texture();
@@ -65,8 +66,8 @@ int Load_texture(){
 
     std::string imagePath = "nacho.bmp";
 
-    SDL_Surface *bmp = SDL_LoadBMP(imagePath.c_str());
-    if (bmp == nullptr) {
+    egg_surf = SDL_LoadBMP(imagePath.c_str());
+    if (egg_surf == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
@@ -74,9 +75,9 @@ int Load_texture(){
         return -1;
     }
 
-    tex = SDL_CreateTextureFromSurface(ren, bmp);
-    SDL_FreeSurface(bmp);
-    if (tex == nullptr) {
+    egg_tex = SDL_CreateTextureFromSurface(ren, egg_surf);
+    SDL_FreeSurface(egg_surf);
+    if (egg_tex == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
@@ -92,7 +93,7 @@ void Play(){
     //show the Easter egg image
     //展示彩蛋图片
     SDL_RenderClear(ren);
-    SDL_RenderCopy(ren, tex, NULL, NULL);
+    SDL_RenderCopy(ren, egg_tex, NULL, NULL);
     SDL_RenderPresent(ren);
 
 	while (SDL_WaitEvent(&MainEvent))
@@ -124,7 +125,7 @@ void Play(){
 
 void Quit(){
 
-    SDL_DestroyTexture(tex);
+    SDL_DestroyTexture(egg_tex);
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
     SDL_Quit();
