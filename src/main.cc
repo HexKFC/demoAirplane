@@ -55,7 +55,7 @@ int Init(){
         return -1;
     }
 
-    if(!Load_texture()){
+    if(Load_texture()<0){
         std::cout << "load_texture Error" << std::endl;
         SDL_Quit();
         return -1;
@@ -73,7 +73,7 @@ int Load_texture(){
         SDL_DestroyWindow(win);
         std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
-        return 0;
+        return -1;
     }
 
     tex = SDL_CreateTextureFromSurface(ren, bmp);
@@ -83,10 +83,10 @@ int Load_texture(){
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
-        return 0;
+        return -1;
     }
 
-    return 1;
+    return 0;
 }
 
 void Quit(){
