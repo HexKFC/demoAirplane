@@ -91,12 +91,9 @@ void Play(){
 
     //show the Easter egg image
     //展示彩蛋图片
-    for (int i = 0; i < 3; ++i) {
-        SDL_RenderClear(ren);
-        SDL_RenderCopy(ren, tex, NULL, NULL);
-        SDL_RenderPresent(ren);
-        SDL_Delay(10000);
-    }
+    SDL_RenderClear(ren);
+    SDL_RenderCopy(ren, tex, NULL, NULL);
+    SDL_RenderPresent(ren);
 
 	while (SDL_WaitEvent(&MainEvent))
 	{
