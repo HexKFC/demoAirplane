@@ -4,9 +4,13 @@
 
 #include <iostream>
 #include <SDL.h>
+#include <stdlib.h>
 
 int main(int argc, char* argv[]) 
 {
+    // fix bug of desktop stuck when running SDL programmes: disable composition
+    putenv((char *)"SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR=0");
+
     if (SDL_Init(SDL_INIT_VIDEO)) {
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return 1;
