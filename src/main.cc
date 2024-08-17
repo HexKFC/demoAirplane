@@ -11,7 +11,7 @@ SDL_Window *win = NULL;
 SDL_Surface *egg_surf = NULL;
 SDL_Event MainEvent;
 
-int Load_texture();
+int LoadTexture();
 void Quit();
 int Init();
 void Play();
@@ -54,7 +54,7 @@ int Init(){
         return -1;
     }
 
-    if(Load_texture()<0){
+    if(LoadTexture()<0){
         std::cout << "load_texture Error" << std::endl;
         SDL_Quit();
         return -1;
@@ -62,7 +62,7 @@ int Init(){
 
 }
 
-int Load_texture(){
+int LoadTexture(){
 
     std::string imagePath = "nacho.bmp";
 
