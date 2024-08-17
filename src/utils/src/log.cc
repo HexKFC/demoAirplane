@@ -32,16 +32,16 @@ void ulog(msg_type type, const char* format, ...) {
     va_end(arg_list);
 
     switch(type) {
-        case msg_info:
+        case MSG_INFO:
             printf("[INFO] %s\n", msg_content);
             break;
-        case msg_debug:
+        case MSG_DEBUG:
             printf("[DEBUG]: %s\n", msg_content);
             break;
-        case msg_warn:
+        case MSG_WARN:
             printf("[WARN]: %s\n", msg_content);
             break;
-        case msg_error:
+        case MSG_ERROR:
             printf("[ERROR]: %s\n", msg_content);
             break;               
         default:                 
