@@ -2,3 +2,7 @@
 	path = 3rd/SDL
 	url = https://github.com/libsdl-org/SDL
 	branch = SDL2
+[submodule "3rd/SDL_image"]
+	path = 3rd/SDL_image
+	url = https://github.com/libsdl-org/SDL_image
+	branch = SDL2
