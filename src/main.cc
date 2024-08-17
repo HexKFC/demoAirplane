@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <SDL.h>
+#include <stdlib.h>
 
 SDL_Texture *egg_tex = NULL;
 SDL_Renderer *ren = NULL;
@@ -18,6 +19,7 @@ void Play();
 
 int main(int argc, char* argv[]) 
 {
+
     //initialization
     if(Init()<0){
         std::cout << "init Error" << std::endl;
