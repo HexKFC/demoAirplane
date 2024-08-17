@@ -6,64 +6,130 @@
 #include <SDL.h>
 #include <stdlib.h>
 
+SDL_Texture *egg_tex = NULL;
+SDL_Renderer *ren = NULL;
+SDL_Window *win = NULL;
+SDL_Surface *egg_surf = NULL;
+SDL_Event MainEvent;
+
+int Load_texture();
+void Quit();
+int Init();
+void Play();
+
 int main(int argc, char* argv[]) 
 {
-    // fix bug of desktop stuck when running SDL programmes: disable composition
-    putenv((char *)"SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR=0");
 
-    if (SDL_Init(SDL_INIT_VIDEO)) {
-        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-        return 1;
+    //initialization
+    if(Init()<0){
+        std::cout << "init Error" << std::endl;
+        return -1;
     }
 
-    SDL_Window *win = SDL_CreateWindow("Hello World -- Nya!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    Play();
+
+    Quit();
+
+    // Return
+    return 0;
+}
+
+int Init(){
+
+    if (SDL_Init(SDL_INIT_EVERYTHING)) {
+        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+        return -1;
+    }
+
+    win = SDL_CreateWindow("demoAirplane", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
 
     if (win == nullptr) {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-        return 1;
+        return -1;
     }
 
-    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateRender Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
-        return 1;
+        return -1;
     }
 
+    if(Load_texture()<0){
+        std::cout << "load_texture Error" << std::endl;
+        SDL_Quit();
+        return -1;
+    }
+
+}
+
+int Load_texture(){
+
     std::string imagePath = "nacho.bmp";
-    SDL_Surface *bmp = SDL_LoadBMP(imagePath.c_str());
-    if (bmp == nullptr) {
+
+    egg_surf = SDL_LoadBMP(imagePath.c_str());
+    if (egg_surf == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
-        return 1;
+        return -1;
     }
 
-    SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, bmp);
-
-    SDL_FreeSurface(bmp);
-    if (tex == nullptr) {
+    egg_tex = SDL_CreateTextureFromSurface(ren, egg_surf);
+    SDL_FreeSurface(egg_surf);
+    if (egg_tex == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
-        return 1;
+        return -1;
     }
 
-    for (int i = 0; i < 3; ++i) {
-        SDL_RenderClear(ren);
-        SDL_RenderCopy(ren, tex, NULL, NULL);
-        SDL_RenderPresent(ren);
-        SDL_Delay(10000);
-    }
+    return 0;
+}
 
-    SDL_DestroyTexture(tex);
+void Play(){
+
+    //show the Easter egg image
+    //展示彩蛋图片
+    SDL_RenderClear(ren);
+    SDL_RenderCopy(ren, egg_tex, NULL, NULL);
+    SDL_RenderPresent(ren);
+
+	while (SDL_WaitEvent(&MainEvent))
+	{
+		switch (MainEvent.type)
+		{
+		case SDL_QUIT:
+			Quit();
+			break;
+		
+		case SDL_KEYDOWN:
+
+			switch (MainEvent.key.keysym.sym)
+			{
+			case SDLK_ESCAPE:
+				Quit();
+				break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+
+}
+
+void Quit(){
+
+    SDL_DestroyTexture(egg_tex);
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
     SDL_Quit();
 
-    // Return
-    return 0;
 }
