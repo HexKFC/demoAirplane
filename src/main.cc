@@ -48,28 +48,27 @@ int main(int argc, char* argv[])
 bool Init(){
 
     if (SDL_Init(SDL_INIT_EVERYTHING)) {
-        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-        OutputLog(msg_error, "SDL_Init Error: ", SDL_GetError());
+        ulog(msg_error, "SDL_Init Error: %s\n", SDL_GetError());
         return true;
     }
 
     win = SDL_CreateWindow("demoAirplane", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
 
     if (win == nullptr) {
-        std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+        ulog(msg_error, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         return true;
     }
 
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
         SDL_DestroyWindow(win);
-        std::cout << "SDL_CreateRender Error: " << SDL_GetError() << std::endl;
+        ulog(msg_error, "SDL_CreateRender Error: \n", SDL_GetError());
         SDL_Quit();
         return true;
     }
 
     if(LoadTexture()){
-        std::cout << "load_texture Error" << std::endl;
+        ulog(msg_error, "load_texture Error");
         SDL_Quit();
         return true;
     }
@@ -85,7 +84,7 @@ bool LoadTexture(){
     if (egg_surf == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
-        std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
+        ulog(msg_error, "SDL_LoadBMP Error: ", SDL_GetError());
         SDL_Quit();
         return true;
     }
@@ -95,7 +94,7 @@ bool LoadTexture(){
     if (egg_tex == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
-        std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
+        ulog(msg_error, "SDL_CreateTextureFromSurface Error: ", SDL_GetError());
         SDL_Quit();
         return true;
     }

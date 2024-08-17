@@ -7,5 +7,5 @@ typedef enum {
     msg_error
 } msg_type;
 
-void OutputLog(msg_type type, const char* format, ...);
+void ulog(msg_type type, const char* format, ...);
 #endif // !LOG_H

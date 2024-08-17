@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-void OutputLog(msg_type type, const char* format, ...) {
+void ulog(msg_type type, const char* format, ...) {
     char* msg_content = NULL;
     va_list arg_list_raw;
     va_start(arg_list_raw, format);
