@@ -4,6 +4,12 @@
 #include <stdlib.h>
 
 void ulog(msg_type type, const char* format, ...) {
+#define COLOR_NONE "\033[0m"
+#define RED        "\033[1;31;40m"
+#define BLUE       "\033[1;34;40m"
+#define GREEN      "\033[1;32;40m"
+#define YELLOW     "\033[1;33;40m"
+
     char* msg_content = NULL;
     va_list arg_list_raw;
     va_start(arg_list_raw, format);
@@ -33,16 +39,16 @@ void ulog(msg_type type, const char* format, ...) {
 
     switch(type) {
         case MSG_INFO:
-            printf("[INFO] %s\n", msg_content);
+            printf(GREEN "[INFO] %s\n" COLOR_NONE, msg_content);
             break;
         case MSG_DEBUG:
-            printf("[DEBUG]: %s\n", msg_content);
+            printf(BLUE "[DEBUG]: %s\n" COLOR_NONE, msg_content);
             break;
         case MSG_WARN:
-            printf("[WARN]: %s\n", msg_content);
+            printf(YELLOW "[WARN]: %s\n" COLOR_NONE, msg_content);
             break;
         case MSG_ERROR:
-            printf("[ERROR]: %s\n", msg_content);
+            printf(RED "[ERROR]: %s\n" COLOR_NONE, msg_content);
             break;               
         default:                 
             printf("[ERROR_LOG]: %s\n", msg_content);
@@ -50,4 +56,10 @@ void ulog(msg_type type, const char* format, ...) {
 
     // 释放内存
     free(msg_content);
+
+#undef COLOR_NONE
+#undef RED       
+#undef BLUE      
+#undef GREEN     
+#undef YELLOW    
 }
