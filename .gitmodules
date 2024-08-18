@@ -5,4 +5,4 @@
 [submodule "3rd/SDL_image"]
 	path = 3rd/SDL_image
 	url = https://github.com/libsdl-org/SDL_image
-	branch = SDL2
+	branch = release-2.8.x
