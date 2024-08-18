@@ -15,6 +15,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #set(CMAKE_C_COMPILER /usr/bin/clang)
 set(FETCHCONTENT_UPDATES_DICONNECTED ON)
 
+if (WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
+set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/out)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/out)
+
 project(sdl-demo LANGUAGES CXX)
 
 add_subdirectory(3rd/SDL       EXCLUDE_FROM_ALL)
@@ -26,7 +33,10 @@ target_include_directories(
     demo PUBLIC
     3rd/SDL/include
     3rd/SDL_image/include
+    src/utils/include
 )
+
+link_directories(${CMAKE_SOURCE_DIR}/out)
 
 target_link_libraries(
     demo PUBLIC
