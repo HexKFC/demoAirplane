@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
     // main loop
     bool main_loop_quit_flag = false;
-    while(main_loop_quit_flag) {
+    while(!main_loop_quit_flag) {
         Play();
     }
 
