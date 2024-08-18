@@ -34,9 +34,32 @@ int main(int argc, char* argv[])
     }
 
     // main loop
-    bool main_loop_quit_flag = false;
-    while(!main_loop_quit_flag) {
-        Play();
+    while(SDL_WaitEvent(&MainEvent)) {
+        switch (MainEvent.type)
+		{
+		case SDL_QUIT:
+			Quit();
+			break;
+		
+		case SDL_KEYDOWN:
+
+			switch (MainEvent.key.keysym.sym)
+			{
+			case SDLK_ESCAPE:
+				Quit();
+				break;
+            case SDLK_SPACE:
+                SDL_Delay(100);
+                Play();
+                break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
     }
 
     Quit();
@@ -115,7 +138,7 @@ void Play(){
 		switch (MainEvent.type)
 		{
 		case SDL_QUIT:
-			Quit();
+			return;
 			break;
 		
 		case SDL_KEYDOWN:
@@ -123,7 +146,7 @@ void Play(){
 			switch (MainEvent.key.keysym.sym)
 			{
 			case SDLK_ESCAPE:
-				Quit();
+				return;
 				break;
 			default:
 				break;
