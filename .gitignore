@@ -3,6 +3,7 @@
 
 # cmake output file
 build/
+out/
 
 # IDE file
 .vscode/
