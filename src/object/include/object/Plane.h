@@ -21,48 +21,48 @@ class Plane{
 	
 public:
 	
-	Plane(SDL_Renderer* temprenderer,std::string imagepath,int T_x,int T_y,int W_x,int W_y);// 
+	Plane(SDL_Renderer* plane_renderer,std::string image_path,int T_x,int T_y,int W_x,int W_y);// 
 
 
 	~Plane ();
 	
-	void addSpeed(int speedtochange);
+	void AddSpeed(int speed_to_change);
 	
-	void subSpeed(int speedtochange);
+	void SubSpeed(int speed_to_change);
 
-	void updatePlaneSpeed();
+	void UpdatePlaneSpeed();
 	
-	void showPlane();
+	void ShowPlane();
 	
-	void changeMaxSpeed(int absx,int absy);
+	void ChangeMaxSpeed(int abs_x,int abs_y);
 	
-	void changeMaxAcc(int absx,int absy);
+	void ChangeMaxAcc(int abs_x,int abs_y);
 	
 private:
-	SDL_Texture* texture=NULL;
+	SDL_Texture* plane_texture=NULL;
 	SDL_Renderer* renderer=NULL;
 	
 	
-	int xmaxacc,ymaxacc;//maximum acc
-	int xacc,yacc;//now acc
+	int x_max_acc,y_max_acc;//maximum acc
+	int x_acc,y_acc;//now acc
 	
 	
-	int xmaxspeed,ymaxspeed;//maximum speed
-	int xspeed,yspeed;//current speed
+	int x_max_speed,y_max_speed;//maximum speed
+	int x_speed,y_speed;//current speed
 	
 	
-	int xplanesize;
-	int yplanesize;//size of the plane
+	int x_plane_size;
+	int y_plane_size;//size of the plane
 	
 	
-	int xwindowsize,ywindowsize;//size of the window
+	int x_window_size,y_window_size;//size of the window
 	
 
-	int x,y;//position of the plane
+	int x_plane_pos,y_plane_pos;//position of the plane
 	
 	
-	int pxacc,nxacc;
-	int pyacc,nyacc;//speed direction of the plane
+	int positive_x_acc,negative_x_acc;
+	int positive_y_acc,negative_y_acc;//speed direction of the plane
 	
 	
 };

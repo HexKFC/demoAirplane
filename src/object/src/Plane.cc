@@ -12,25 +12,34 @@
 //T_x,T_y initial position of the plane
 //W_x W_y initial size of the window
 
-Plane::Plane(SDL_Renderer* temprenderer,std::string imagepath,int T_x,int T_y,int W_x,int W_y):renderer(temprenderer),x(T_x),y(T_y),xwindowsize(W_x),ywindowsize(W_y)
+Plane::Plane(SDL_Renderer* plane_renderer,std::string image_path,int T_x,int T_y,int W_x,int W_y):
+renderer(plane_renderer),
+x_plane_pos(T_x),y_plane_pos(T_y),
+x_window_size(W_x),y_window_size(W_y)
 {
 	//renderer=temprenderer; 
 	
-	xplanesize=120;yplanesize=120;xspeed=0;yspeed=0;xmaxspeed=1;ymaxspeed=1;pxacc=0;pyacc=0;nxacc=0;nyacc=0;xacc=0;yacc=0;xmaxacc=1;ymaxacc=1;
+	x_plane_size=120;y_plane_size=120;
+	x_speed=0;y_speed=0;
+	x_max_speed=1;y_max_speed=1;
+	positive_x_acc=0;positive_y_acc=0;
+	negative_x_acc=0;negative_y_acc=0;
+	x_acc=0;y_acc=0;
+	x_max_acc=1;y_max_acc=1;
 	
-	SDL_Surface* loadImage=IMG_Load(imagepath.c_str());
-	if(loadImage==NULL)
+	SDL_Surface* plane_surf=IMG_Load(image_path.c_str());
+	if(plane_surf==NULL)
 	{
 		printf("error loading img\n");
 		return;
 	}
-	texture=SDL_CreateTextureFromSurface(renderer,loadImage);
-	if(texture==NULL)
+	plane_texture=SDL_CreateTextureFromSurface(renderer,plane_surf);
+	if(plane_texture==NULL)
 	{
 		printf("error\n%s\n",SDL_GetError());
 		return;
 	}
-	SDL_FreeSurface(loadImage);	
+	SDL_FreeSurface(plane_surf);	
 	
 
 }
@@ -41,74 +50,74 @@ Plane::Plane(SDL_Renderer* temprenderer,std::string imagepath,int T_x,int T_y,in
 Plane::~Plane ()
 {
 	
-	SDL_DestroyTexture(texture); 
-	texture=NULL;
+	SDL_DestroyTexture(plane_texture); 
+	plane_texture=NULL;
 	renderer=NULL;
 	
 }
 
 
 
-void Plane::addSpeed(int speedtochange)
+void Plane::AddSpeed(int speedtochange)
 {
 	switch(speedtochange)
 	{
 		case PLANE_UP:
-			nyacc=1;
+			negative_y_acc=1;
 			break;
 		case PLANE_DOWN:
-			pyacc=1;
+			positive_y_acc=1;
 			break;
 		case PLANE_LEFT:
-			nxacc=1;
+			negative_x_acc=1;
 			break;
 		case PLANE_RIGHT:
-			pxacc=1; 
+			positive_x_acc=1; 
 			break;
 			
 	}
 }
 
-void Plane::subSpeed(int speedtochange)
+void Plane::SubSpeed(int speedtochange)
 {
 	switch(speedtochange)
 	{
 		case PLANE_UP:
-			nyacc=0;
+			negative_y_acc=0;
 			break;
 		case PLANE_DOWN:
-			pyacc=0;
+			positive_y_acc=0;
 			break;
 		case PLANE_LEFT:
-			nxacc=0;
+			negative_x_acc=0;
 			break;
 		case PLANE_RIGHT:
-			pxacc=0; 
+			positive_x_acc=0; 
 			break;
 			
 	}
 }
 
-void Plane::updatePlaneSpeed()
+void Plane::UpdatePlaneSpeed()
 {
 	
 	
 
-	if(xspeed+xacc>=xmaxspeed){
-		xspeed=xmaxspeed;
+	if(x_speed+x_acc>=x_max_speed){
+		x_speed=x_max_speed;
 	}
-	else if(xspeed+xacc<=-xmaxspeed){
-		xspeed=-xmaxspeed;
+	else if(x_speed+x_acc<=-x_max_speed){
+		x_speed=-x_max_speed;
 	}
-	else xspeed+=xacc;
+	else x_speed+=x_acc;
 	
-	if(yspeed+yacc>=ymaxspeed){
-		yspeed=ymaxspeed;
+	if(y_speed+y_acc>=y_max_speed){
+		y_speed=y_max_speed;
 	}
-	else if(yspeed+yacc<=-ymaxspeed){
-		yspeed=-ymaxspeed;
+	else if(y_speed+y_acc<=-y_max_speed){
+		y_speed=-y_max_speed;
 	}
-	else yspeed+=yacc;
+	else y_speed+=y_acc;
 /*	
 	if(xacc!=0)x += (newxspeed*newxspeed - xspeed*xspeed) / (2*xacc);
 	else x+=xspeed;
@@ -123,64 +132,64 @@ void Plane::updatePlaneSpeed()
 	//y= (y+yspeed>=0) ? ( (y+yspeed<=ywindowsize-yplanesize) ? (y+yspeed):(ywindowsize-yplanesize) ): 0;
 	
 	
-	if((x+xspeed>0)&&(x+xspeed<xwindowsize-xplanesize))
+	if((x_plane_pos+x_speed>0)&&(x_plane_pos+x_speed<x_window_size-x_plane_size))
 	{
-		x+=xspeed;
+		x_plane_pos+=x_speed;
 	}
-	else if(x+xspeed<=0)
+	else if(x_plane_pos+x_speed<=0)
 	{
-		x=0;
-		xspeed=0;
+		x_plane_pos=0;
+		x_speed=0;
 	}
-	else if(x+xspeed>=xwindowsize-xplanesize)
+	else if(x_plane_pos+x_speed>=x_window_size-x_plane_size)
 	{
-		x=xwindowsize-xplanesize;
-		xspeed=0;
+		x_plane_pos=x_window_size-x_plane_size;
+		x_speed=0;
 	}
 	
-	if((y+yspeed>0)&&(y+yspeed<ywindowsize-yplanesize))
+	if((y_plane_pos+y_speed>0)&&(y_plane_pos+y_speed<y_window_size-y_plane_size))
 	{
-		y+=yspeed;
+		y_plane_pos+=y_speed;
 	}
-	else if(y+yspeed<=0)
+	else if(y_plane_pos+y_speed<=0)
 	{
-		y=0;
-		yspeed=0;
+		y_plane_pos=0;
+		y_speed=0;
 	}
-	else if(y+yspeed>=ywindowsize-yplanesize)
+	else if(y_plane_pos+y_speed>=y_window_size-y_plane_size)
 	{
-		y=ywindowsize-yplanesize;
-		yspeed=0;
+		y_plane_pos=y_window_size-y_plane_size;
+		y_speed=0;
 	}
 	
 }
 
-void Plane::showPlane()
+void Plane::ShowPlane()
 {
 	
-	xacc=(pxacc-nxacc)*xmaxacc;
-	yacc=(pyacc-nyacc)*ymaxacc;
+	x_acc=(positive_x_acc-negative_x_acc)*x_max_acc;
+	y_acc=(positive_y_acc-negative_y_acc)*y_max_acc;
 	
 	
-	SDL_Rect renderQuad ={x,y,xplanesize,yplanesize};	
-	SDL_RenderCopy(renderer,texture,NULL,&renderQuad);
+	SDL_Rect render_plane_rect ={x_plane_pos,y_plane_pos,x_plane_size,y_plane_size};	
+	SDL_RenderCopy(renderer,plane_texture,NULL,&render_plane_rect);
 	SDL_RenderPresent(renderer);
 	
 }
 
 
 
-void Plane::changeMaxSpeed(int absx,int absy)
+void Plane::ChangeMaxSpeed(int x_difference,int y_difference)
 {
-	xmaxspeed+=absx;
-	ymaxspeed+=absy;
+	x_max_speed+=x_difference;
+	y_max_speed+=y_difference;
 }
 	
 	
-void Plane::changeMaxAcc(int absx,int absy)
+void Plane::ChangeMaxAcc(int x_difference,int y_difference)
 {
-	xmaxacc+=absx;
-	ymaxacc+=absy;
+	x_max_acc+=x_difference;
+	y_max_acc+=y_difference;
 }
 
 

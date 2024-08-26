@@ -8,6 +8,7 @@
 #include <SDL.h>
 #include <stdlib.h>
 #include <utils/log.h>
+#include <object/Plane.h>
 
 SDL_Texture *egg_tex = NULL;
 SDL_Renderer *ren = NULL;
