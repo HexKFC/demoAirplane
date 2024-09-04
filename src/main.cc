@@ -162,6 +162,7 @@ void Play(){
             user_plane.ShowPlane();
             for(int i=0;i<laser_number;i++)
                 user_laser[i].ShowLaser();
+            SDL_RenderPresent(ren);
 	        while (SDL_PollEvent(&MainEvent))
 	        {
 	        	switch (MainEvent.type)

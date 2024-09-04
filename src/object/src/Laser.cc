@@ -72,7 +72,6 @@ void Laser::ShowLaser()
     if(render_flag){
         SDL_Rect render_laser_rect ={pos_x,pos_y,x_laser_size,y_laser_size};	
 	    SDL_RenderCopy(laser_renderer,laser_texture,NULL,&render_laser_rect);
-	    SDL_RenderPresent(laser_renderer);
     }
 
 }
