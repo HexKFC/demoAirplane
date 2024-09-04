@@ -139,7 +139,7 @@ void Play(){
     Laser user_laser[laser_number];
     //初始化子弹对象
     for(int i=0;i<laser_number;i++)
-        user_laser[i].LaserInit(ren,"laser.png",0,0,480);
+        user_laser[i].LaserInit(ren,"laser.png");
 
     //启用计时器
     Uint32 start_time=SDL_GetTicks();
@@ -199,7 +199,7 @@ void Play(){
                         for(int i=0;i<laser_number;i++){
                             if(user_laser[i].GetLaserStatus()==false)//子弹已准备就绪
                             {
-                                user_laser[i].ShootLaser(50,0);//此处需plane类的获取飞机位置的接口
+                                user_laser[i].ShootLaser(320,480);//此处需plane类的获取飞机位置的接口
                                 break;
                             }
                         }

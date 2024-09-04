@@ -11,7 +11,7 @@ public:
 
     ~Laser ();
 
-    void LaserInit(SDL_Renderer* renderer,std::string image_path,int laser_pos_x,int laser_pos_y,int window_height);
+    void LaserInit(SDL_Renderer* renderer,std::string image_path);
 
     void UpdateLaserState();
 
