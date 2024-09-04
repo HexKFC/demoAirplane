@@ -2,6 +2,8 @@
     #define SDL_MAIN_HANDLED
 #endif
 
+#ifndef PLANE_H
+#define PLANE_H
 
 #include <SDL.h>
 #include <string>
@@ -23,7 +25,6 @@ public:
 	
 	Plane(SDL_Renderer* plane_renderer,std::string image_path,int T_x,int T_y,int W_x,int W_y);// 
 
-
 	~Plane ();
 	
 	void AddSpeed(int speed_to_change);
@@ -38,9 +39,13 @@ public:
 	
 	void ChangeMaxAcc(int abs_x,int abs_y);
 	
+	SDL_Rect GetPlaneRect();
+	
 private:
 	SDL_Texture* plane_texture=NULL;
 	SDL_Renderer* renderer=NULL;
+	
+	SDL_Rect render_plane_rect;//Rect of the plane
 	
 	
 	int x_max_acc,y_max_acc;//maximum acc
@@ -66,3 +71,5 @@ private:
 	
 	
 };
+
+#endif
