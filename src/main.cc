@@ -8,12 +8,16 @@
 #include <SDL.h>
 #include <stdlib.h>
 #include <utils/log.h>
+#include <object/Plane.h>
 
 SDL_Texture *egg_tex = NULL;
 SDL_Renderer *ren = NULL;
 SDL_Window *win = NULL;
 SDL_Surface *egg_surf = NULL;
 SDL_Event MainEvent;
+
+int FPS=20;
+int move_time=25;
 
 bool LoadTexture();
 void Quit();
@@ -34,9 +38,32 @@ int main(int argc, char* argv[])
     }
 
     // main loop
-    bool main_loop_quit_flag = false;
-    while(!main_loop_quit_flag) {
-        Play();
+    while(SDL_WaitEvent(&MainEvent)) {
+        switch (MainEvent.type)
+		{
+		case SDL_QUIT:
+			Quit();
+			break;
+		
+		case SDL_KEYDOWN:
+
+			switch (MainEvent.key.keysym.sym)
+			{
+			case SDLK_ESCAPE:
+				Quit();
+				break;
+            case SDLK_SPACE:
+                SDL_Delay(100);
+                Play();
+                break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
     }
 
     Quit();
@@ -104,37 +131,103 @@ bool LoadTexture(){
 
 void Play(){
 
-    //show the Easter egg image
-    //展示彩蛋图片
-    SDL_RenderClear(ren);
-    SDL_RenderCopy(ren, egg_tex, NULL, NULL);
-    SDL_RenderPresent(ren);
+    //创建用户飞机对象
+    Plane user_plane(ren,"plane.png",50,50,640,480);
+    //启用计时器
+    Uint32 start_time=SDL_GetTicks();
+    //设置飞机最大速度
+    user_plane.ChangeMaxSpeed(25,25);
 
-	while (SDL_WaitEvent(&MainEvent))
-	{
-		switch (MainEvent.type)
+    while(true){//游戏循环
+        Uint32 now_time=SDL_GetTicks();
+        if(now_time-start_time>=move_time)
 		{
-		case SDL_QUIT:
-			Quit();
-			break;
-		
-		case SDL_KEYDOWN:
-
-			switch (MainEvent.key.keysym.sym)
-			{
-			case SDLK_ESCAPE:
-				Quit();
-				break;
-			default:
-				break;
-			}
-			break;
-
-		default:
-			break;
+			start_time=now_time;
+			user_plane.UpdatePlaneSpeed();
 		}
-	}
+		
+		if(now_time-start_time==FPS)
+		{
+            SDL_RenderClear(ren);//更新屏幕
+            user_plane.ShowPlane();
+	        while (SDL_PollEvent(&MainEvent))
+	        {
+	        	switch (MainEvent.type)
+	        	{
+	        	case SDL_QUIT:
+	        		return;
+	        		break;
+		
+	         	case SDL_KEYDOWN:
 
+	        		switch (MainEvent.key.keysym.sym)
+	    	    	{
+                    case 'w':
+						
+						user_plane.AddSpeed(PLANE_UP);					
+						break;
+						
+					case 's':
+						
+						user_plane.AddSpeed(PLANE_DOWN);
+						break;
+						
+					case 'a':
+						
+						user_plane.AddSpeed(PLANE_LEFT);
+						break;
+						
+					case 'd':
+						
+						user_plane.AddSpeed(PLANE_RIGHT);
+						break;
+
+	    	    	case SDLK_ESCAPE:
+                        //show the Easter egg image
+                        //展示彩蛋图片
+                        SDL_RenderClear(ren);
+                        SDL_RenderCopy(ren, egg_tex, NULL, NULL);
+                        SDL_RenderPresent(ren);
+                        
+	    	    		return;
+	    	    		break;
+	    	    	default:
+	    	    		break;
+	    	    	}
+	    	    	break;
+
+                case SDL_KEYUP:
+			    
+				
+				    switch(MainEvent.key.keysym.sym)
+				    {
+					case 'w':
+
+						user_plane.SubSpeed(PLANE_UP);
+						break;
+					case 's':
+						
+						user_plane.SubSpeed(PLANE_DOWN);
+						break;
+					case 'a':
+						
+						user_plane.SubSpeed(PLANE_LEFT);
+						break;
+					case 'd':
+						
+						user_plane.SubSpeed(PLANE_RIGHT);
+						break;
+	    	    	default:
+	    	    		break;                        
+				    }
+                    break;
+
+	    	    default:
+	    	    	break;
+                }
+	        }
+        }    
+    }
 }
 
 void Quit(){

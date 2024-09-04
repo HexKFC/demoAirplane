@@ -27,6 +27,7 @@ project(sdl-demo LANGUAGES CXX)
 add_subdirectory(3rd/SDL       EXCLUDE_FROM_ALL)
 add_subdirectory(3rd/SDL_image EXCLUDE_FROM_ALL)
 add_subdirectory(src/utils)
+add_subdirectory(src/object)
 
 add_executable(demo src/main.cc)
 target_include_directories(
@@ -34,6 +35,7 @@ target_include_directories(
     3rd/SDL/include
     3rd/SDL_image/include
     src/utils/include
+    src/object/include
 )
 
 link_directories(${CMAKE_SOURCE_DIR}/out)
@@ -43,4 +45,5 @@ target_link_libraries(
     SDL2::SDL2
     SDL2_image
     utils
+    object
 )
