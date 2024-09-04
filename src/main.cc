@@ -146,6 +146,9 @@ void Play(){
     //设置飞机最大速度
     user_plane.ChangeMaxSpeed(25,25);
 
+    //为了限制长按连发的状态变量
+    bool laser_ready = true;
+
     while(true){//游戏循环
         Uint32 now_time=SDL_GetTicks();
         if(now_time-start_time>=move_time)
@@ -155,7 +158,6 @@ void Play(){
             for(int i=0;i<laser_number;i++)
                 user_laser[i].UpdateLaserState();
 		}
-		
 		if(now_time-start_time==FPS)
 		{
             SDL_RenderClear(ren);//更新屏幕
@@ -196,13 +198,18 @@ void Play(){
 						break;
                     
                     case SDLK_SPACE:
-                        for(int i=0;i<laser_number;i++){
-                            if(user_laser[i].GetLaserStatus()==false)//子弹已准备就绪
-                            {
-                                user_laser[i].ShootLaser(320,480);//此处需plane类的获取飞机位置的接口
-                                break;
+
+                        if(laser_ready){
+                            for(int i=0;i<laser_number;i++){
+                                if(user_laser[i].GetLaserStatus()==false)//子弹已准备就绪
+                                {
+                                    user_laser[i].ShootLaser(320,480);//此处需plane类的获取飞机位置的接口
+                                    laser_ready=false;
+                                    break;
+                                }
                             }
                         }
+
                         break;
                         
 	    	    	case SDLK_ESCAPE:
@@ -240,6 +247,12 @@ void Play(){
 						
 						user_plane.SubSpeed(PLANE_RIGHT);
 						break;
+
+                    case SDLK_SPACE:
+
+                        laser_ready=true;
+                        break;
+
 	    	    	default:
 	    	    		break;                        
 				    }
