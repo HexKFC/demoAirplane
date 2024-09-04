@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <utils/log.h>
 #include <object/Plane.h>
+#include <object/Laser.h>
 
 SDL_Texture *egg_tex = NULL;
 SDL_Renderer *ren = NULL;
@@ -18,6 +19,7 @@ SDL_Event MainEvent;
 
 int FPS=20;
 int move_time=25;
+const int laser_number=20;
 
 bool LoadTexture();
 void Quit();
@@ -133,6 +135,12 @@ void Play(){
 
     //创建用户飞机对象
     Plane user_plane(ren,"plane.png",50,50,640,480);
+    //创建用户子弹对象
+    Laser user_laser[laser_number];
+    //初始化子弹对象
+    for(int i=0;i<laser_number;i++)
+        user_laser[i].LaserInit(ren,"laser.png",0,0,480);
+
     //启用计时器
     Uint32 start_time=SDL_GetTicks();
     //设置飞机最大速度
@@ -144,12 +152,16 @@ void Play(){
 		{
 			start_time=now_time;
 			user_plane.UpdatePlaneSpeed();
+            for(int i=0;i<laser_number;i++)
+                user_laser[i].UpdateLaserState();
 		}
 		
 		if(now_time-start_time==FPS)
 		{
             SDL_RenderClear(ren);//更新屏幕
             user_plane.ShowPlane();
+            for(int i=0;i<laser_number;i++)
+                user_laser[i].ShowLaser();
 	        while (SDL_PollEvent(&MainEvent))
 	        {
 	        	switch (MainEvent.type)
@@ -181,14 +193,24 @@ void Play(){
 						
 						user_plane.AddSpeed(PLANE_RIGHT);
 						break;
-
+                    
+                    case SDLK_SPACE:
+                        for(int i=0;i<laser_number;i++){
+                            if(user_laser[i].GetLaserStatus()==false)//子弹已准备就绪
+                            {
+                                user_laser[i].ShootLaser(50,0);//此处需plane类的获取飞机位置的接口
+                                break;
+                            }
+                        }
+                        break;
+                        
 	    	    	case SDLK_ESCAPE:
                         //show the Easter egg image
                         //展示彩蛋图片
                         SDL_RenderClear(ren);
                         SDL_RenderCopy(ren, egg_tex, NULL, NULL);
                         SDL_RenderPresent(ren);
-                        
+
 	    	    		return;
 	    	    		break;
 	    	    	default:

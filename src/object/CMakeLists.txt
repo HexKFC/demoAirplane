@@ -7,10 +7,12 @@ target_include_directories(
     include
     ../../3rd/SDL/include
     ../../3rd/SDL_image/include
+    ../utils/include
 )
 
 target_link_libraries(
     object PUBLIC
     SDL2::SDL2
     SDL2_image
+    utils
 )
