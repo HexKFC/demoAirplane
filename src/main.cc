@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <utils/log.h>
 #include <object/Plane.h>
+#include <object/Laser.h>
 
 SDL_Texture *egg_tex = NULL;
 SDL_Renderer *ren = NULL;
@@ -188,7 +189,7 @@ void Play(){
                         SDL_RenderClear(ren);
                         SDL_RenderCopy(ren, egg_tex, NULL, NULL);
                         SDL_RenderPresent(ren);
-                        
+
 	    	    		return;
 	    	    		break;
 	    	    	default:
