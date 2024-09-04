@@ -13,12 +13,11 @@ Laser::~Laser ()
 	
 }
 
-void Laser::LaserInit(SDL_Renderer* renderer,std::string image_path,int laser_pos_x,int laser_pos_y,int window_height)
+void Laser::LaserInit(SDL_Renderer* renderer,std::string image_path)
 {
     laser_renderer=renderer;
-    pos_x=laser_pos_x;
-    pos_y=laser_pos_y;
-    pos_border=window_height;
+    pos_x=-1;
+    pos_y=-1;
     x_laser_size=10;y_laser_size=10;
     laser_speed = 10;
     render_flag = false;
@@ -44,17 +43,17 @@ void Laser::LaserInit(SDL_Renderer* renderer,std::string image_path,int laser_po
 
 void Laser::UpdateLaserState()
 {
-    if(pos_y<=pos_border && laser_busy)
+    if(pos_y>=0 && laser_busy)
     {
         render_flag=true;//正常更新位置并渲染
-        pos_y+=laser_speed;
+        pos_y-=laser_speed;
     }
-    else if(pos_y>pos_border && laser_busy)
+    else if(pos_y<0 && laser_busy)
     {
         render_flag=false;//复位，不渲染
         laser_busy=false;
-        pos_x =0;
-        pos_y =0;
+        pos_x =-1;
+        pos_y =-1;
     }
 
 }
@@ -72,7 +71,6 @@ void Laser::ShowLaser()
     if(render_flag){
         SDL_Rect render_laser_rect ={pos_x,pos_y,x_laser_size,y_laser_size};	
 	    SDL_RenderCopy(laser_renderer,laser_texture,NULL,&render_laser_rect);
-	    SDL_RenderPresent(laser_renderer);
     }
 
 }
