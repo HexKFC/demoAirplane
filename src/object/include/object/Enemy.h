@@ -40,7 +40,7 @@ public:
 	
 	void AutoDestroy();
 	
-	void Collapse(SDL_Rect rect);
+	bool Collapse(SDL_Rect rect);
 	
 private:
 

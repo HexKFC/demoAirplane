@@ -4,6 +4,7 @@
     #define SDL_MAIN_HANDLED
 #endif
 
+#include <algorithm>
 #include <iostream>
 #include <SDL.h>
 #include <stdlib.h>
@@ -18,8 +19,8 @@ SDL_Window *win = NULL;
 SDL_Event MainEvent;
 SDL_DisplayMode dpmode;
 
-int FPS=20;
-int move_time=25;
+int FPS=10;
+int move_time=15;
 const int laser_number=20;
 
 bool LoadTexture();
@@ -114,7 +115,7 @@ bool Init(){
 void Play(){
 
     //创建用户飞机对象
-    Plane user_plane(ren,"plane.png",50,50,dpmode.w,dpmode.h);
+    Plane user_plane(ren,"plane.png",dpmode.w/2,dpmode.h-50,dpmode.w,dpmode.h);
     //创建用户敌人对象
     Enemy user_enemy(ren,"enemy.png",dpmode.w,dpmode.h);
     //创建用户子弹对象
@@ -127,6 +128,8 @@ void Play(){
     Uint32 start_time=SDL_GetTicks();
     //设置飞机最大速度
     user_plane.ChangeMaxSpeed(10,10);
+    //敌人生成计数器
+    int times=7;
 
     //为了限制长按连发的状态变量
     bool laser_ready = true;
@@ -137,16 +140,53 @@ void Play(){
 		{
 			start_time=now_time;
 			user_plane.UpdatePlaneSpeed();
+
             for(int i=0;i<laser_number;i++)
                 user_laser[i].UpdateLaserState();
+
+            user_enemy.UpdateEnemyPosition();
+            times++;
+			
+			if(times==8)
+			{
+				SDL_Rect newenemy={rand()%(dpmode.w-50),-50,50,50};
+				user_enemy.AddEnemy(newenemy);
+				times=0;
+			}
 		}
 		if(now_time-start_time==FPS)
 		{
             SDL_RenderClear(ren);//更新屏幕
-            user_plane.ShowPlane();
+
+            //死亡判定
+            if(user_enemy.Collapse(user_plane.GetPlaneRect()))
+            {
+                Quit();
+                break;
+
+            }
+
+
+            user_enemy.AutoDestroy();
+
+		    for(int i=0;i<laser_number;i++)
+            {
+                if(user_enemy.Collapse(user_laser[i].GetLaserRect()))//敌人和子弹销毁
+                    user_laser[i].Reset();
+            }
+
+            
+
+
             for(int i=0;i<laser_number;i++)
                 user_laser[i].ShowLaser();
+
+		    user_enemy.ShowEnemy();
+
+            user_plane.ShowPlane();
+
             SDL_RenderPresent(ren);
+
 	        while (SDL_PollEvent(&MainEvent))
 	        {
 	        	switch (MainEvent.type)
@@ -186,7 +226,7 @@ void Play(){
                             for(int i=0;i<laser_number;i++){
                                 if(user_laser[i].GetLaserStatus()==false)//子弹已准备就绪
                                 {
-                                    user_laser[i].ShootLaser(320,480);//此处需plane类的获取飞机位置的接口
+                                    user_laser[i].ShootLaser(user_plane.GetPlaneRect().x+user_plane.GetPlaneRect().w/2,user_plane.GetPlaneRect().y);//此处需plane类的获取飞机位置的接口
                                     laser_ready=false;
                                     break;
                                 }

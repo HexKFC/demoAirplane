@@ -131,13 +131,16 @@ void Enemy::AutoDestroy()
 	}
 }
 
-void Enemy::Collapse(SDL_Rect rect)
+bool Enemy::Collapse(SDL_Rect rect)
 {
+	bool state=false;
 	for(int i=0;i<enemy.size();i++)
 	{
 		if(CrashCheck(&enemy[i].enemy_rect,&rect))
 		{
 			enemy.erase(enemy.begin()+i);
+			state=true;
 		}
 	}
+	return state;
 }
