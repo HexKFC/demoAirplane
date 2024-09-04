@@ -9,9 +9,11 @@ public:
 private:
 
     SDL_Renderer* laser_renderer=NULL;
+    SDL_Texture* laser_texture=NULL;
 
     int pos_x,pos_y;//子弹生成位置
 
+    int laser_speed;
 
 
 
