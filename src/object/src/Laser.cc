@@ -4,6 +4,15 @@
 #include <utils/log.h>
 #include <string>
 
+
+Laser::~Laser ()
+{
+	SDL_DestroyTexture(laser_texture); 
+	laser_texture=NULL;
+	laser_renderer=NULL;
+	
+}
+
 void Laser::LaserInit(SDL_Renderer* renderer,std::string image_path,int laser_pos_x,int laser_pos_y,int window_height)
 {
     laser_renderer=renderer;
@@ -11,7 +20,7 @@ void Laser::LaserInit(SDL_Renderer* renderer,std::string image_path,int laser_po
     pos_y=laser_pos_y;
     pos_border=window_height;
     x_laser_size=10;y_laser_size=10;
-    laser_speed = 1;
+    laser_speed = 10;
     render_flag = false;
     laser_busy = false;
 
