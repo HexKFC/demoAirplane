@@ -7,6 +7,7 @@ target_include_directories(
     include
     ../../3rd/SDL/include
     ../../3rd/SDL_image/include
+    ../../src/utils/include
 )
 
 target_link_libraries(

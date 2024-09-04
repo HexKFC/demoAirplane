@@ -4,12 +4,14 @@
 #include <utils/log.h>
 #include <string>
 
-Laser::Laser(SDL_Renderer* renderer,std::string image_path,int laser_pos_x,int laser_pos_y):
+Laser::Laser(SDL_Renderer* renderer,std::string image_path,int laser_pos_x,int laser_pos_y,int window_height):
 laser_renderer(renderer),
-pos_x(laser_pos_x),pos_y(laser_pos_y)
+pos_x(laser_pos_x),pos_y(laser_pos_y),
+pos_border(window_height)
 {
-
+    x_laser_size=10;y_laser_size=10;
     laser_speed = 1;
+    render_flag = false;
 
     //加载子弹材质
     SDL_Surface* laser_surf=IMG_Load(image_path.c_str());
@@ -26,5 +28,29 @@ pos_x(laser_pos_x),pos_y(laser_pos_y)
 	}
     SDL_FreeSurface(laser_surf);
 
+
+}
+
+void Laser::UpdateLaserState()
+{
+    if(pos_y<=pos_border)
+    {
+        render_flag=true;//正常更新位置并渲染
+        pos_y+=laser_speed;
+    }else{
+        render_flag=false;//复位，不渲染
+        pos_x =0;
+        pos_y =0;
+    }
+
+}
+
+void Laser::ShowLaser()
+{
+    if(render_flag){
+        SDL_Rect render_laser_rect ={pos_x,pos_y,x_laser_size,y_laser_size};	
+	    SDL_RenderCopy(laser_renderer,laser_texture,NULL,&render_laser_rect);
+	    SDL_RenderPresent(laser_renderer);
+    }
 
 }
