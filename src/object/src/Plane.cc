@@ -8,6 +8,8 @@
 #include <SDL_image.h>
 #include <string>
 #include <algorithm>
+
+#include <utils/log.h>
 #include <object/Plane.h>
 //T_x,T_y initial position of the plane
 //W_x W_y initial size of the window
@@ -30,14 +32,19 @@ x_window_size(W_x),y_window_size(W_y)
 	SDL_Surface* plane_surf=IMG_Load(image_path.c_str());
 	if(plane_surf==NULL)
 	{
-		printf("error loading img\n");
-		return;
+		
+		//print error
+		//printf("error loading img\n");
+		ulog(MSG_ERROR,SDL_GetError());
+		exit(0);
 	}
 	plane_texture=SDL_CreateTextureFromSurface(renderer,plane_surf);
 	if(plane_texture==NULL)
 	{
-		printf("error\n%s\n",SDL_GetError());
-		return;
+		
+		//print error
+		ulog(MSG_ERROR,SDL_GetError());
+		exit(0);
 	}
 	SDL_FreeSurface(plane_surf);	
 	
@@ -171,9 +178,9 @@ void Plane::ShowPlane()
 	y_acc=(positive_y_acc-negative_y_acc)*y_max_acc;
 	
 	
-	SDL_Rect render_plane_rect ={x_plane_pos,y_plane_pos,x_plane_size,y_plane_size};	
+	render_plane_rect={x_plane_pos,y_plane_pos,x_plane_size,y_plane_size};	
 	SDL_RenderCopy(renderer,plane_texture,NULL,&render_plane_rect);
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 	
 }
 
@@ -190,6 +197,12 @@ void Plane::ChangeMaxAcc(int x_difference,int y_difference)
 {
 	x_max_acc+=x_difference;
 	y_max_acc+=y_difference;
+}
+
+
+SDL_Rect Plane::GetPlaneRect()
+{
+	return render_plane_rect;
 }
 
 

@@ -21,10 +21,15 @@ public:
 
     bool GetLaserStatus();//获取子弹是否正在飞行的标志
 
+    SDL_Rect GetLaserRect();
+    
+    void Reset();
+
 private:
 
     SDL_Renderer* laser_renderer=NULL;
     SDL_Texture* laser_texture=NULL;
+    SDL_Rect laser_rect;
 
     int pos_x,pos_y;//子弹生成位置
     int x_laser_size,y_laser_size;

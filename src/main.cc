@@ -4,21 +4,23 @@
     #define SDL_MAIN_HANDLED
 #endif
 
+#include <algorithm>
 #include <iostream>
 #include <SDL.h>
 #include <stdlib.h>
 #include <utils/log.h>
 #include <object/Plane.h>
 #include <object/Laser.h>
+#include <object/Enemy.h>
 
-SDL_Texture *egg_tex = NULL;
+
 SDL_Renderer *ren = NULL;
 SDL_Window *win = NULL;
-SDL_Surface *egg_surf = NULL;
 SDL_Event MainEvent;
+SDL_DisplayMode dpmode;
 
-int FPS=20;
-int move_time=25;
+int FPS=10;
+int move_time=15;
 const int laser_number=20;
 
 bool LoadTexture();
@@ -36,7 +38,7 @@ int main(int argc, char* argv[])
     //initialization
     if(Init()){
         std::cout << "init Error" << std::endl;
-        return -1;
+        exit(-1);
     }
 
     // main loop
@@ -81,10 +83,18 @@ bool Init(){
         return true;
     }
 
-    win = SDL_CreateWindow("demoAirplane", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    if(SDL_GetDesktopDisplayMode(0, &dpmode))
+    {
+        ulog(MSG_ERROR, "SDL_GetDesktopDisplayMode Error: \n", SDL_GetError());
+        Quit();
+        return true;
+    }
+
+    win = SDL_CreateWindow("demoAirplane", 100, 100, dpmode.w, dpmode.h, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     if (win == nullptr) {
         ulog(MSG_ERROR, "SDL_CreateWindow Error: %s\n", SDL_GetError());
+        Quit();
         return true;
     }
 
@@ -92,49 +102,22 @@ bool Init(){
     if (ren == nullptr) {
         SDL_DestroyWindow(win);
         ulog(MSG_ERROR, "SDL_CreateRender Error: \n", SDL_GetError());
-        SDL_Quit();
+        Quit();
         return true;
     }
+    
 
-    if(LoadTexture()){
-        ulog(MSG_ERROR, "load_texture Error");
-        SDL_Quit();
-        return true;
-    }
 
     return false;
 }
 
-bool LoadTexture(){
-
-    std::string imagePath = "nacho.bmp";
-
-    egg_surf = SDL_LoadBMP(imagePath.c_str());
-    if (egg_surf == nullptr) {
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        ulog(MSG_ERROR, "SDL_LoadBMP Error: ", SDL_GetError());
-        SDL_Quit();
-        return true;
-    }
-
-    egg_tex = SDL_CreateTextureFromSurface(ren, egg_surf);
-    SDL_FreeSurface(egg_surf);
-    if (egg_tex == nullptr) {
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        ulog(MSG_ERROR, "SDL_CreateTextureFromSurface Error: ", SDL_GetError());
-        SDL_Quit();
-        return true;
-    }
-
-    return false;
-}
 
 void Play(){
 
     //创建用户飞机对象
-    Plane user_plane(ren,"plane.png",50,50,640,480);
+    Plane user_plane(ren,"plane.png",dpmode.w/2,dpmode.h-50,dpmode.w,dpmode.h);
+    //创建用户敌人对象
+    Enemy user_enemy(ren,"enemy.png",dpmode.w,dpmode.h);
     //创建用户子弹对象
     Laser user_laser[laser_number];
     //初始化子弹对象
@@ -144,7 +127,9 @@ void Play(){
     //启用计时器
     Uint32 start_time=SDL_GetTicks();
     //设置飞机最大速度
-    user_plane.ChangeMaxSpeed(25,25);
+    user_plane.ChangeMaxSpeed(10,10);
+    //敌人生成计数器
+    int times=7;
 
     //为了限制长按连发的状态变量
     bool laser_ready = true;
@@ -155,21 +140,59 @@ void Play(){
 		{
 			start_time=now_time;
 			user_plane.UpdatePlaneSpeed();
+
             for(int i=0;i<laser_number;i++)
                 user_laser[i].UpdateLaserState();
+
+            user_enemy.UpdateEnemyPosition();
+            times++;
+			
+			if(times==8)
+			{
+				SDL_Rect newenemy={rand()%(dpmode.w-50),-50,50,50};
+				user_enemy.AddEnemy(newenemy);
+				times=0;
+			}
 		}
 		if(now_time-start_time==FPS)
 		{
             SDL_RenderClear(ren);//更新屏幕
-            user_plane.ShowPlane();
+
+            //死亡判定
+            if(user_enemy.Collapse(user_plane.GetPlaneRect()))
+            {
+                Quit();
+                break;
+
+            }
+
+
+            user_enemy.AutoDestroy();
+
+		    for(int i=0;i<laser_number;i++)
+            {
+                if(user_enemy.Collapse(user_laser[i].GetLaserRect()))//敌人和子弹销毁
+                    user_laser[i].Reset();
+            }
+
+            
+
+
             for(int i=0;i<laser_number;i++)
                 user_laser[i].ShowLaser();
+
+		    user_enemy.ShowEnemy();
+
+            user_plane.ShowPlane();
+
             SDL_RenderPresent(ren);
+
 	        while (SDL_PollEvent(&MainEvent))
 	        {
 	        	switch (MainEvent.type)
 	        	{
 	        	case SDL_QUIT:
+                    Quit();
 	        		return;
 	        		break;
 		
@@ -203,7 +226,7 @@ void Play(){
                             for(int i=0;i<laser_number;i++){
                                 if(user_laser[i].GetLaserStatus()==false)//子弹已准备就绪
                                 {
-                                    user_laser[i].ShootLaser(320,480);//此处需plane类的获取飞机位置的接口
+                                    user_laser[i].ShootLaser(user_plane.GetPlaneRect().x+user_plane.GetPlaneRect().w/2,user_plane.GetPlaneRect().y);//此处需plane类的获取飞机位置的接口
                                     laser_ready=false;
                                     break;
                                 }
@@ -215,9 +238,7 @@ void Play(){
 	    	    	case SDLK_ESCAPE:
                         //show the Easter egg image
                         //展示彩蛋图片
-                        SDL_RenderClear(ren);
-                        SDL_RenderCopy(ren, egg_tex, NULL, NULL);
-                        SDL_RenderPresent(ren);
+
 
 	    	    		return;
 	    	    		break;
@@ -268,7 +289,6 @@ void Play(){
 
 void Quit(){
 
-    SDL_DestroyTexture(egg_tex);
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
     SDL_Quit();

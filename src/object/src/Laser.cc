@@ -69,12 +69,24 @@ void Laser::ShootLaser(int plane_pos_x, int plane_pos_y)
 void Laser::ShowLaser()
 {
     if(render_flag){
-        SDL_Rect render_laser_rect ={pos_x,pos_y,x_laser_size,y_laser_size};	
-	    SDL_RenderCopy(laser_renderer,laser_texture,NULL,&render_laser_rect);
+        laser_rect ={pos_x,pos_y,x_laser_size,y_laser_size};	
+	    SDL_RenderCopy(laser_renderer,laser_texture,NULL,&laser_rect);
     }
 
 }
 
 bool Laser::GetLaserStatus(){
     return laser_busy;
+}
+
+SDL_Rect Laser::GetLaserRect()
+{
+    return laser_rect;
+}
+
+void Laser::Reset()
+{
+    pos_x=-10;
+    pos_y=-10;
+    laser_busy=false;
 }
