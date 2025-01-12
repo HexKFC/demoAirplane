@@ -59,13 +59,22 @@ Enemy::~Enemy()
 
 
 
-void Enemy::AddEnemy(SDL_Rect rect)
+void Enemy::AddEnemy(SDL_Rect rect,int enemy_type)//enemy_type用于生成不同种类的敌人
 {
 	Enemy_INFO tempenemyinfo;
 	tempenemyinfo.enemy_rect=rect;
-	enemy.push_back(tempenemyinfo);
-	
+	//根据enemy_type修改血量、速度
+	switch (enemy_type)
+	{
+		case 0:
+			tempenemyinfo.blood=40;
+			tempenemyinfo.speed=2;
+			break;
+		default:
+			break;
+	}
 
+	enemy.push_back(tempenemyinfo);
 }
 
 void Enemy::UpdateEnemyPosition()

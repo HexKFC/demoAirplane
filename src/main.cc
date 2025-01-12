@@ -150,7 +150,7 @@ void Play(){
 			if(times==8)
 			{
 				SDL_Rect newenemy={rand()%(dpmode.w-50),-50,50,50};
-				user_enemy.AddEnemy(newenemy);
+				user_enemy.AddEnemy(newenemy,0);
 				times=0;
 			}
 		}

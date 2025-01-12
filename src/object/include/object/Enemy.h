@@ -32,7 +32,7 @@ public:
 
 	~Enemy();
 	
-	void AddEnemy(SDL_Rect rect); 
+	void AddEnemy(SDL_Rect rect,int enemy_type); 
 	
 	void UpdateEnemyPosition(); 
 	
