@@ -18,6 +18,7 @@ typedef struct Enemy_INFO
 	SDL_Rect enemy_rect;
 	int blood=20;
 	int speed=5;
+	int texture_type=0;
 }Enemy_INFO;
 
 
@@ -32,7 +33,7 @@ public:
 
 	~Enemy();
 	
-	void AddEnemy(SDL_Rect rect); 
+	void AddEnemy(int new_enemy_x_pos,int enemy_type); 
 	
 	void UpdateEnemyPosition(); 
 	
@@ -47,8 +48,8 @@ private:
 	std::vector<Enemy_INFO> enemy; 
 
 	SDL_Renderer* renderer=NULL;
-	SDL_Texture* enemy_texture=NULL;
-	
+	SDL_Texture* enemy_texture[3]={NULL};
+
 	int x_window_size,y_window_size;//size of the window
 	
 	
