@@ -59,26 +59,36 @@ Enemy::~Enemy()
 
 
 
-void Enemy::AddEnemy(SDL_Rect rect,int enemy_type)//enemy_type用于生成不同种类的敌人
+void Enemy::AddEnemy(int new_enemy_x_pos,int enemy_type)//enemy_type用于生成不同种类的敌人
 {
 	Enemy_INFO tempenemyinfo;
-	tempenemyinfo.enemy_rect=rect;
+	SDL_Rect new_enemy_rect;
 	//根据enemy_type修改血量、速度
 	switch (enemy_type)
 	{
 		case 0:
+			new_enemy_rect={new_enemy_x_pos,-50,75,75};//随机生成新敌人位置
+			tempenemyinfo.enemy_rect=new_enemy_rect;
 			tempenemyinfo.blood=40;
 			tempenemyinfo.speed=2;
 			break;
 		case 1:
+			new_enemy_rect={new_enemy_x_pos,-50,50,50};//随机生成新敌人位置
+			tempenemyinfo.enemy_rect=new_enemy_rect;
 			tempenemyinfo.blood=20;
 			tempenemyinfo.speed=5;
 			break;
 		case 2:
-			tempenemyinfo.blood=100;
-			tempenemyinfo.speed=1;
+			new_enemy_rect={new_enemy_x_pos,-50,100,100};//随机生成新敌人位置
+			tempenemyinfo.enemy_rect=new_enemy_rect;
+			tempenemyinfo.blood=60;
+			tempenemyinfo.speed=2;
 			break;
 		default:
+			new_enemy_rect={new_enemy_x_pos,-50,50,50};//随机生成新敌人位置
+			tempenemyinfo.enemy_rect=new_enemy_rect;
+			tempenemyinfo.blood=40;
+			tempenemyinfo.speed=2;
 			break;
 	}
 
