@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
 #include <utils/log.h>
 #include <utils/crash_check.h>
 #include <object/Enemy.h>
@@ -22,28 +21,30 @@ renderer(temprenderer),
 x_window_size(screensizex),
 y_window_size(screensizey)
 {
-	SDL_Surface* surface=IMG_Load(imagepath.c_str());
-	
-	if(surface==NULL)
+	for (int i=0;i<3;i++)
 	{
-		//print error
-		ulog(MSG_ERROR,SDL_GetError());
-		exit(0);
+		std::string full_image_path = imagepath + "/enemy" + std::to_string(i) + ".png";
+		SDL_Surface* surface=IMG_Load((full_image_path).c_str());
+	
+		if(surface==NULL)
+		{
+			//print error
+			ulog(MSG_ERROR,SDL_GetError());
+			exit(0);
+		}
+	
+		enemy_texture[i]=SDL_CreateTextureFromSurface(renderer,surface);
+	
+		if(enemy_texture==NULL)
+		{
+			//print error
+			ulog(MSG_ERROR,SDL_GetError());
+			exit(0);
+		}
+		SDL_FreeSurface(surface);
+
 	}
-	
-	enemy_texture=SDL_CreateTextureFromSurface(renderer,surface);
-	
-	if(enemy_texture==NULL)
-	{
-		//print error
-		ulog(MSG_ERROR,SDL_GetError());
-		exit(0);
-	}
-	
-	SDL_FreeSurface(surface);
-	
-	
-	
+
 }
 
 
@@ -52,9 +53,9 @@ Enemy::~Enemy()
 {
 	
 	renderer=NULL;
-	SDL_DestroyTexture(enemy_texture);
-	
-	
+	SDL_DestroyTexture(enemy_texture[0]);
+	SDL_DestroyTexture(enemy_texture[1]);
+	SDL_DestroyTexture(enemy_texture[2]);
 }
 
 
@@ -91,7 +92,7 @@ void Enemy::AddEnemy(int new_enemy_x_pos,int enemy_type)//enemy_type用于生成
 			tempenemyinfo.speed=2;
 			break;
 	}
-
+	tempenemyinfo.texture_type=enemy_type;
 	enemy.push_back(tempenemyinfo);
 }
 
@@ -127,7 +128,7 @@ void Enemy::ShowEnemy()
 		for(int i=0;i<enemy.size();i++)
 		{
 			
-			SDL_RenderCopy(renderer,enemy_texture,NULL,&enemy[i].enemy_rect);
+			SDL_RenderCopy(renderer,enemy_texture[enemy[i].texture_type],NULL,&enemy[i].enemy_rect);
 			
 			//SDL_Delay(200);
 			
