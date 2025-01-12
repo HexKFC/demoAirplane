@@ -117,7 +117,7 @@ void Play(){
     //创建用户飞机对象
     Plane user_plane(ren,"plane.png",dpmode.w/2,dpmode.h-50,dpmode.w,dpmode.h);
     //创建用户敌人对象
-    Enemy user_enemy(ren,"enemy.png",dpmode.w,dpmode.h);
+    Enemy user_enemy(ren,"images",dpmode.w,dpmode.h);
     //创建用户子弹对象
     Laser user_laser[laser_number];
     //初始化子弹对象
@@ -149,8 +149,7 @@ void Play(){
 			
 			if(times==8)
 			{
-				SDL_Rect newenemy={rand()%(dpmode.w-50),-50,50,50};
-				user_enemy.AddEnemy(newenemy);
+				user_enemy.AddEnemy(rand()%(dpmode.w-50),rand()%3);//随机生成type为0-2的敌人
 				times=0;
 			}
 		}
