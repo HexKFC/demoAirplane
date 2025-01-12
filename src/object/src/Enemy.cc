@@ -68,28 +68,20 @@ void Enemy::AddEnemy(int new_enemy_x_pos,int enemy_type)//enemy_type用于生成
 	switch (enemy_type)
 	{
 		case 0:
-			new_enemy_rect={new_enemy_x_pos,-50,75,75};//随机生成新敌人位置
-			tempenemyinfo.enemy_rect=new_enemy_rect;
-			tempenemyinfo.blood=40;
-			tempenemyinfo.speed=2;
+			new_enemy_rect={new_enemy_x_pos,-50,50,50};//随机生成新敌人位置
+			tempenemyinfo={new_enemy_rect,20,5,enemy_type};
 			break;
 		case 1:
-			new_enemy_rect={new_enemy_x_pos,-50,50,50};//随机生成新敌人位置
-			tempenemyinfo.enemy_rect=new_enemy_rect;
-			tempenemyinfo.blood=20;
-			tempenemyinfo.speed=5;
+			new_enemy_rect={new_enemy_x_pos,-50,75,75};//随机生成新敌人位置
+			tempenemyinfo={new_enemy_rect,40,2,enemy_type};
 			break;
 		case 2:
 			new_enemy_rect={new_enemy_x_pos,-50,100,100};//随机生成新敌人位置
-			tempenemyinfo.enemy_rect=new_enemy_rect;
-			tempenemyinfo.blood=60;
-			tempenemyinfo.speed=2;
+			tempenemyinfo={new_enemy_rect,60,2,enemy_type};
 			break;
 		default:
 			new_enemy_rect={new_enemy_x_pos,-50,50,50};//随机生成新敌人位置
-			tempenemyinfo.enemy_rect=new_enemy_rect;
-			tempenemyinfo.blood=40;
-			tempenemyinfo.speed=2;
+			tempenemyinfo={new_enemy_rect,20,5,0};
 			break;
 	}
 	tempenemyinfo.texture_type=enemy_type;
