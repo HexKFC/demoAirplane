@@ -115,14 +115,14 @@ bool Init(){
 void Play(){
 
     //创建用户飞机对象
-    Plane user_plane(ren,"plane.png",dpmode.w/2,dpmode.h-50,dpmode.w,dpmode.h);
+    Plane user_plane(ren,"images/plane.png",dpmode.w/2,dpmode.h-50,dpmode.w,dpmode.h);
     //创建用户敌人对象
     Enemy user_enemy(ren,"images",dpmode.w,dpmode.h);
     //创建用户子弹对象
     Laser user_laser[laser_number];
     //初始化子弹对象
     for(int i=0;i<laser_number;i++)
-        user_laser[i].LaserInit(ren,"laser.png");
+        user_laser[i].LaserInit(ren,"images/laser.png");
 
     //启用计时器
     Uint32 start_time=SDL_GetTicks();
