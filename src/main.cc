@@ -149,8 +149,8 @@ void Play(){
 			
 			if(times==8)
 			{
-				SDL_Rect newenemy={rand()%(dpmode.w-50),-50,50,50};
-				user_enemy.AddEnemy(newenemy,rand()%4);
+				SDL_Rect newenemy={rand()%(dpmode.w-50),-50,50,50};//随机生成敌人位置
+				user_enemy.AddEnemy(newenemy,rand()%4);//随机生成type为0-3的敌人
 				times=0;
 			}
 		}
