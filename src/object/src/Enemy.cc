@@ -70,6 +70,14 @@ void Enemy::AddEnemy(SDL_Rect rect,int enemy_type)//enemy_type用于生成不同
 			tempenemyinfo.blood=40;
 			tempenemyinfo.speed=2;
 			break;
+		case 1:
+			tempenemyinfo.blood=20;
+			tempenemyinfo.speed=5;
+			break;
+		case 2:
+			tempenemyinfo.blood=100;
+			tempenemyinfo.speed=1;
+			break;
 		default:
 			break;
 	}
